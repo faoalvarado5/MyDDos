@@ -1,0 +1,2 @@
+# MyDDos
+En la actualidad muchos de los webservers se encuentran subutilizados, pero en períodos de tiempo cortos, es posible que se sobre utilicen debido a la demanda del servicio. Esto sucede con muchos proveedores de entradas a eventos masivos. La configuración normalmente no contempla la limitación de los recursos. Existen dos técnicas que pueden ayudar a administrar mejor los recursos de un servidor, ellas son pre-thread y pre-forked.
