@@ -21,7 +21,7 @@ struct addrinfo *getHostInfo(char* host, char* port) {
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   if ((r = getaddrinfo(host, port, &hints, &getaddrinfo_res))) {
-    fprintf(stderr, "[getHostInfo:21:getaddrinfo] %s\n", gai_strerror(r));
+    fprintf(stderr, "Host error %s\n", gai_strerror(r));
     return NULL;
   }
 
@@ -44,13 +44,13 @@ int establishConnection(struct addrinfo *info) {
     if ((clientfd = socket(info->ai_family,
                            info->ai_socktype,
                            info->ai_protocol)) < 0) {
-      perror("[establishConnection:35:socket]");
+      perror("SOcket error");
       continue;
     }
 
     if (connect(clientfd, info->ai_addr, info->ai_addrlen) < 0) {
       close(clientfd);
-      perror("[establishConnection:42:connect]");
+      perror("Conecction error");
       continue;
     }
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
   char buf[BUF_SIZE];
 
   if (argc != 3) {
-    fprintf(stderr, "USAGE: ./httpclient <hostname> <port>\n");
+    fprintf(stderr, "--> ./httpclientC hostname port\n");
     return 1;
   }
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
   clientfd = establishConnection(getHostInfo(argv[1], argv[2]));
   if (clientfd == -1) {
     fprintf(stderr,
-            "[main:73] Failed to connect to: %s:%s%s \n",
+            "Failed to connect to: %s:%s%s \n",
             argv[1], argv[2], argv[3]);
     return -1;
   }
