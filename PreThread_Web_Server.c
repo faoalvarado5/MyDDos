@@ -88,12 +88,12 @@ void startPrethreadWebServer(){
     	printf("Error al vincular el programa con el socket. Puerto %d\n",atoi(ARGUMENT_PORT));
     	exit(EXIT_FAILURE);
     }
-    printf("Programa vinculado al socket en el puerto carepichas%d\n ", atoi(ARGUMENT_PORT));
+    printf("Programa vinculado al socket en el puerto %d\n ", atoi(ARGUMENT_PORT));
 
 
     //Se crean los hilos para la conexion
     for(int i = 0; i < ARGUMENT_MAX_THREADS; i++){
-        printf("response obtenido %d \n", i);
+        //printf("response obtenido %d \n", i);
         pthread_t newThread;
         int responde_code = pthread_create(&newThread, NULL, connectionHandler, NULL);
 
@@ -104,11 +104,11 @@ void startPrethreadWebServer(){
 
 
 	//escucha conexiones nuevas
-    printf("LISTEN");
-    if(listen(socket_Server, 1024) == -1){
+    if(listen(socket_Server, ARGUMENT_MAX_THREADS) == -1){
 	
 			printf("Error en listening......\n");
 	}
+	
     printf("Esperando conexiones entrantes\n");
     
     int new_connection;
@@ -131,7 +131,7 @@ void startPrethreadWebServer(){
          	pthread_cond_broadcast(&threads_condition);
          	pthread_mutex_lock(&thread_number_mutex);
          	thread_number++;
-         	attendIncomingRequest(new_socket, ARGUMENT_PATH, atoi(ARGUMENT_PORT), ARGUMENT_MAX_THREADS, thread_number);
+         	//attendIncomingRequest(new_socket, ARGUMENT_PATH, atoi(ARGUMENT_PORT), ARGUMENT_MAX_THREADS, thread_number);
          	if (thread_number == ARGUMENT_MAX_THREADS)
          	{ 
             	pthread_cond_wait(&accept_condition, &thread_number_mutex);
@@ -141,7 +141,6 @@ void startPrethreadWebServer(){
 		}
 	}
 }
-
 
 /*
     Manejo de argumentos para el servidor y su creacion
@@ -160,9 +159,7 @@ void createWebServer(int argc, char *argv[]){
     printf("PATH RECIBIDO %s\n",ARGUMENT_PATH);
     printf("PUERTO RECIBIDO %s\n",ARGUMENT_PORT);
 
-    printf("flag");
     startPrethreadWebServer();
-
 
 }
 

@@ -1,52 +1,17 @@
-from datetime import datetime
-import json
+import socket
 import time
-import random
-import string
-import requests
-import treq
-from klein import Klein
-from twisted.internet import task
-from twisted.internet import threads
-from twisted.web.server import Site
-from twisted.internet import reactor, endpoints
 
-app = Klein()
+c = int(raw_input("Numero de conexiones: \n"))
+url = raw_input("URL del recurso: \n")
 
-def test(y):
-    print("test called at {datetime.now().isoformat()}")
-    x = requests.get("http://www.example.com")
-    time.sleep(10)
+while(c):
+	time.sleep(1)
+	s = 0
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((socket.gethostname(), 8080))
+	s.send(url)
+	#msg = s.recv(1024)
+	#print(msg.decode("utf-8"))
+	c -= 1
 
-    return json.dumps([{
-        "time": datetime.now().isoformat(),
-        "text": x.text[:10],
-        "arg": y
-    }])
-
-@app.route('/<string:y>',methods = ['GET'])
-def index(request, y):
-    return threads.deferToThread(test, y)
-
-def send_requests():
-    # send 3 concurrent requests
-    rand_letter = random.choice(string.ascii_letters)
-    for i in range(3):
-        y = rand_letter + str(i)
-        print("request send at {datetime.now().isoformat()}")
-        d = treq.get('localhost:8080')
-        d.addCallback(treq.content)
-        #d.addCallback(lambda r: print(r.decode()))
-
-loop = task.LoopingCall(send_requests)
-loop.start(15) # repeat every 15 seconds
-
-reactor.suggestThreadPoolSize(3)
-
-# disable unwanted logs
-# app.run("localhost", 8080)
-
-# this way reactor logs only print calls
-web_server = endpoints.serverFromString(reactor, "tcp:8080")
-web_server.listen(Site(app.resource()))
-reactor.run()
+print("Todas las solicitudes hechas, finalizado con exito.")
