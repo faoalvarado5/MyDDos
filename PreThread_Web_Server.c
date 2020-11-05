@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 
 //#define PORT 8080
+#define BUFFER_SIZE 2048
 
 //Variables globales de argumentos recibidos en consola
 int ARGUMENT_MAX_THREADS;
@@ -67,17 +68,20 @@ void *connectionHandler(){
 */
 void startPrethreadWebServer(){
 
+	int on = 1;
+	
     //Creacion de socket
     socket_Server = socket(AF_INET,SOCK_STREAM,0);
-    if (socket_Server == -1){
+    if (socket_Server < 0){
         printf("Error al crear la conexion con el socket\n");
         exit(EXIT_FAILURE);
     }
-
+    //ajusta configuraciones del socket
+	setsockopt(socket_Server, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
     //unir el programa al socket creado
-    struct sockaddr_in serverAddr;
+    struct sockaddr_in serverAddr, clientAddr;
 
-    memset(&serverAddr, '\0', sizeof(serverAddr));
+    //memset(&serverAddr, '\0', sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddr.sin_port = htons(atoi(ARGUMENT_PORT));
@@ -102,21 +106,38 @@ void startPrethreadWebServer(){
         }
     }
 
-
 	//escucha conexiones nuevas
     if(listen(socket_Server, ARGUMENT_MAX_THREADS) == -1){
 	
 			printf("Error en listening......\n");
+			close(socket_Server);
+			exit(1);
 	}
 	
     printf("Esperando conexiones entrantes\n");
     
     int new_connection;
+    socklen_t addrlen;
+    addrlen = sizeof(clientAddr);
+    char buffer[BUFFER_SIZE];
+    int fd_rsc;
     
     while(1){
 	
-		new_connection = accept(socket_Server, NULL, NULL);
+		new_connection = accept(socket_Server, (struct sockaddr *)&clientAddr, &addrlen);
 		printf("Nueva conexion detectada...\n");
+		int sent_bytes;
+		
+		char *msg = "mensaje de prueba";
+		int lng = strlen(msg);
+		while(lng > 0){
+			
+			sent_bytes = send(new_connection, msg, lng, 0);
+			printf("sent_byte --> %d", sent_bytes);
+			lng -= sent_bytes;
+		}
+		
+		
 		if(new_connection == -1){
 		
 			printf("Error al proncesar nueva conexion...\n");

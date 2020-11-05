@@ -1,112 +1,84 @@
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <netdb.h>
+#include <unistd.h>
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
-#define BUF_SIZE 128 //sirve para definiciones de strings
+char* ARGUMENT_PATH;
 
-//variable para cambiar la ruta de donde se encuentran los archivos html
-char Files_Url[BUF_SIZE] = "/home/ubuntu/Desktop/Sistemas Operativos/Repositorio Programaciones/MyDDos/Files";
+int requestHandler(char *host, char* port, char* method, char *file);
 
-/*
-    Entrada: Host y Puerto
-    Salida: Tipo de variable para la informacion del host
-*/
-struct addrinfo *getHostInfo(char* host, char* port) {
-  int r;
-  struct addrinfo hints, *getaddrinfo_res;
-  memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_STREAM;
-  if ((r = getaddrinfo(host, port, &hints, &getaddrinfo_res))) {
-    fprintf(stderr, "Host error %s\n", gai_strerror(r));
-    return NULL;
-  }
+int parsePath(int argc, char *argv[]){
 
-  return getaddrinfo_res;
+	//Asignacion path
+    ARGUMENT_PATH = argv[2];
+    char *host = strtok(argv[2], ":");
+    char *port = strtok(NULL, "/");
+    char *method = strtok(NULL, "/");
+    char *file = strtok(NULL, "\n");
+
+    requestHandler(host, port, method, file);
+    return 0;
 }
 
+int main(int argc, char *argv[]){
 
-/*
-    Entrada: Recibe una clase addrinfo
-    Salida: Codigo para la conexion
-    Codigos
-        -1 = conexion nula
-        clienfd = conexion exitosa
-*/
-int establishConnection(struct addrinfo *info) {
-  if (info == NULL) return -1;
-
-  int clientfd;
-  for (;info != NULL; info = info->ai_next) {
-    if ((clientfd = socket(info->ai_family,
-                           info->ai_socktype,
-                           info->ai_protocol)) < 0) {
-      perror("SOcket error");
-      continue;
-    }
-
-    if (connect(clientfd, info->ai_addr, info->ai_addrlen) < 0) {
-      close(clientfd);
-      perror("Conecction error");
-      continue;
-    }
-
-    freeaddrinfo(info);
-    return clientfd;
-  }
-
-  freeaddrinfo(info);
-  return -1;
+	parsePath(argc,argv);
+	return 0;
 }
 
-/*
-    Entrada: clientfd (resultado del metodo establishConnection)
-    Salida: Ninguna, mensaje en pantalla sobre el get realizado
-    Segun el url de los archivos, realiza un GET y envia al
-    cliente la solicitud
-*/
-void GET(int clientfd) {
-  char req[1000] = {0};
-  sprintf(req, "GET %s HTTP/1.0\r\n\r\n",Files_Url);
-  send(clientfd, req, strlen(req), 0);
-}
+int requestHandler(char *host, char* port, char* method, char *file){
 
-/*
-    Entrada: Argumentos en consola
-    Salida: Codigo de resultado de ejecucion
-        1: no puso suficientes argumentos
-        -1: fallo de conexion
-        0: Realizacion correcta del GET
+	printf("Host: %s\n", host);
+    printf("Puerto: %s\n", port);
+    //printf("Puerto: %s\n", &port[2]); /este es el puerto para protocolos
+    printf("Metodo: %s\n", method);
+    printf("Nombre: %s\n", file);
+	
+	int clientSocket;
+	struct sockaddr_in serverAddr;
+	char buffer[1024];
 
-*/
-int main(int argc, char **argv) {
-  int clientfd;
-  char buf[BUF_SIZE];
+	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if(clientSocket < 0){
+		printf("[-]Error en conexion\n");
+		exit(1);
+	}
+	printf("[+]Client socket creado\n");
 
-  if (argc != 3) {
-    fprintf(stderr, "--> ./httpclientC hostname port\n");
-    return 1;
-  }
+	memset(&serverAddr, '\0', sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(atoi(port));
+    serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  //Conexion con el host
-  clientfd = establishConnection(getHostInfo(argv[1], argv[2]));
-  if (clientfd == -1) {
-    fprintf(stderr,
-            "Failed to connect to: %s:%s%s \n",
-            argv[1], argv[2], argv[3]);
-    return -1;
-  }
+	if(connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0){
+		printf("[-]Error en conexion\n");
+		exit(1);
+	}
+	printf("[+]Conectado al server\n");
 
-  //ejecucion del GET
-  GET(clientfd);
-  while (recv(clientfd, buf, BUF_SIZE, 0) > 0) {
-    fputs(buf, stdout);
-    memset(buf, 0, BUF_SIZE);
-  }
+	
+	bzero(buffer, sizeof(buffer));
+	strcat(buffer, method);
+	strcat(buffer, "/");
+	strcat(buffer, file);
+	send(clientSocket, buffer, strlen(buffer), 0);
+	
+	bzero(buffer, sizeof(buffer));
+	if(recv(clientSocket, buffer, 1024, 0) < 0){
+		printf("[-]Error in receiving data.\n");
+	}
+	else if(strcmp(buffer, "STATUS: OK") == 0){
+		printf("STATUS: OK\n");
+		exit(0);
+	}else{
+		printf("STATUS: BAD REQUEST\n");
+		exit(0);
+	}
+	close(clientSocket);
 
-  close(clientfd);
-  return 0;
+	return 0;
 }
