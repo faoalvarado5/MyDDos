@@ -1,17 +1,38 @@
+import os
+import sys
+import threading
 import socket
-import time
 
-c = int(raw_input("Numero de conexiones: \n"))
-url = raw_input("URL del recurso: \n")
 
-while(c):
-	time.sleep(1)
-	s = 0
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect((socket.gethostname(), 8080))
-	s.send(url)
-	#msg = s.recv(1024)
-	#print(msg.decode("utf-8"))
-	c -= 1
+ejecuciones = -1;
+binario = "";
+parametros = "";
 
-print("Todas las solicitudes hechas, finalizado con exito.")
+def attack(command):
+	#s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	os.system(cmd)
+	print("Ataque enviado")
+	
+	
+
+
+if (sys.argv [1] == "-n" and len(sys.argv) != 4):
+
+	ejecuciones = int(sys.argv[2])
+	binario = sys.argv[3]
+	print("binario recibido "+binario)
+	parametros = sys.argv[4]
+	print("parametros recibido "+parametros)
+	
+	cmd = "./"+ str(binario) +" "+str(parametros)
+	
+	
+	for i in range(ejecuciones):
+		#os.system(cmd)
+		threading.Thread(target=attack(cmd)).start()
+	
+
+else:
+	print("USAGE: stress -n <cantidad-hilos> httpclient <parametros del cliente>")
+	sys.exit(-2);
+

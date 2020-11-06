@@ -66,17 +66,18 @@ int requestHandler(char *host, char* port, char* method, char *file){
 	strcat(buffer, "/");
 	strcat(buffer, file);
 	send(clientSocket, buffer, strlen(buffer), 0);
-	
-	bzero(buffer, sizeof(buffer));
-	if(recv(clientSocket, buffer, 1024, 0) < 0){
-		printf("[-]Error in receiving data.\n");
-	}
-	else if(strcmp(buffer, "STATUS: OK") == 0){
-		printf("STATUS: OK\n");
-		exit(0);
-	}else{
-		printf("STATUS: BAD REQUEST\n");
-		exit(0);
+	while(1){
+		bzero(buffer, sizeof(buffer));
+		if(recv(clientSocket, buffer, 1024, 0) < 0){
+			printf("[-]Error in receiving data.\n");
+		}
+		else if(strcmp(buffer, "STATUS: OK") == 0){
+			printf("STATUS: OK\n");
+			exit(0);
+		}else{
+			printf("STATUS: BAD REQUEST\n");
+			exit(0);
+		}
 	}
 	close(clientSocket);
 

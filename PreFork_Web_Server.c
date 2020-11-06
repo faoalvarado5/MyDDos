@@ -121,12 +121,13 @@ int startPreforkWebServer(){
 			
 			close(sockfd);
 			
+			/*
 			while(1){
 				bzero(buffer, sizeof(buffer));
 				if(recv(newSocket, buffer, 1024, 0) < 0){
 					printf("[-]Error in receiving data.\n");
 				}
-				else {
+				else if(FILE_NAME == NULL){
 					//printf("buff->%s", buffer);
 					char *method = strtok(buffer, "/");
 					FILE_NAME = strtok(NULL, "\n");
@@ -148,6 +149,30 @@ int startPreforkWebServer(){
 					}
 				}
 			}
+			*/
+			
+				
+				char buf[2048];
+				int img;
+				struct stat st;
+
+				memset(buf, 0, 2048);
+				read(newSocket, buf, 2047);
+
+				printf("buf::::%s\n", buf);
+
+				printf("path->[%s]", strcat(ARGUMENT_PATH, "img.jpeg"));
+				if(!strncmp(buf, "GET /img.jpeg", 13)){
+					img = open("img.jpeg", O_RDONLY);
+					stat("img.jpeg", &st);  
+					int size = st.st_size;
+					sendfile(newSocket, img, NULL, size);
+					close(img);
+				}else{
+				write(newSocket, webpage, sizeof(webpage)-1);}
+				close(newSocket);
+				
+			
 		}
 		for(int i=0; i<ARGUMENT_MAX_THREADS; i++){
 			if(arrayClients[i] == newSocket){

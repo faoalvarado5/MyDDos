@@ -4,6 +4,7 @@
 
 
 char *_serverFilesPath = "/home/ubuntu/Desktop/Operativos/Progras/MyDDos/Files";
+int delay = 1;
 
 //Puerto 8080 defecto, el resto segun las referencias
 void attendIncomingRequest(int socket_number, char *ARGUMENT_PATH, int ARGUMENT_PORT, int ARGUMENT_MAX_THREADS, int total_threads)
@@ -59,7 +60,7 @@ void attendIncomingSSHRequest(int pConnection)
 /*Funcion que se encarga de atender una nueva peticion*/
 void attendIncomingHttpRequest(int pConnection, char *pServerRootPath)
 {
-	printf("Conexion con el puerto HTTP reconocida");
+	printf("Conexion con el puerto HTTP reconocida\n");
 	sleep(1);
 }
 
