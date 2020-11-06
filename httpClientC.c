@@ -32,6 +32,7 @@ int main(int argc, char *argv[]){
 
 int requestHandler(char *host, char* port, char* method, char *file){
 
+	printf("---------------------\n");
 	printf("Host: %s\n", host);
     printf("Puerto: %s\n", port);
     //printf("Puerto: %s\n", &port[2]); /este es el puerto para protocolos
@@ -79,6 +80,7 @@ int requestHandler(char *host, char* port, char* method, char *file){
 			exit(0);
 		}
 	}
+	printf("---------------------\n");
 	close(clientSocket);
 
 	return 0;

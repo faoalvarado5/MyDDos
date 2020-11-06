@@ -36,27 +36,45 @@ int spaceAvailable(int *arrayClients){
 	return 0;
 }
 
-int asd(int newSocket){
+int openImage(int newSocket){
 
+	printf("FROM ASD[%s]\n", strcat(ARGUMENT_PATH, FILE_NAME));
 	/*
-	char buf[2048];
 	int img;
 	struct stat st;
 
-	memset(buf, 0, 2048);
-	read(newSocket, buf, 2047);
-	
-	printf("buf::::%s\n", buf);
+	int buf_size = 65535;
 
+	char *buf = malloc(buf_size);
+	int rcvd = recv(newSocket, buf, buf_size, 0);
+
+	if (rcvd < 0) // receive error
+		fprintf(stderr, ("recv() error\n"));
+	else if (rcvd == 0) // receive socket closed
+		fprintf(stderr, "Client disconnected upexpectedly.\n");
+	else // message received
+	{
+
+	printf("%s\n", buf);
+	
+	//printf("[%s]", strcat(ARGUMENT_PATH, FILE_NAME));
+	
 	if(!strncmp(buf, "GET /img.jpeg", 13)){
+		char * param = "";
+		asprintf(&param, "%s%s", ARGUMENT_PATH, "img.jpeg");
+		printf("param->{%s}", param);
+		//printf("vergaaaaaaaaaaaaaaaaaaaaaa");
 		img = open("img.jpeg", O_RDONLY);
 		stat("img.jpeg", &st);  
 		int size = st.st_size;
 		sendfile(newSocket, img, NULL, size);
 		close(img);
-	}else{
-	write(newSocket, webpage, sizeof(webpage)-1);}
+	}
+	else{
+		write(newSocket, webpage, sizeof(webpage)-1);
+	}
 	close(newSocket);
+	}
 	*/
 	return 1;
 }
@@ -121,19 +139,20 @@ int startPreforkWebServer(){
 			
 			close(sockfd);
 			
-			/*
 			while(1){
 				bzero(buffer, sizeof(buffer));
 				if(recv(newSocket, buffer, 1024, 0) < 0){
 					printf("[-]Error in receiving data.\n");
 				}
 				else if(FILE_NAME == NULL){
-					//printf("buff->%s", buffer);
+					
+					
 					char *method = strtok(buffer, "/");
 					FILE_NAME = strtok(NULL, "\n");
 					printf("Method: %s\n", method);
 					printf("Trying to retrieve: %s\n", FILE_NAME);
-					if(asd(newSocket) == 1){ //llamo a la funcion de gestion de la imagen
+
+					if(openImage(newSocket) == 1){ //llamo a la funcion de gestion de la imagen
 						send(newSocket, "STATUS: OK", strlen("STATUS: OK"), 0);
 						bzero(buffer, sizeof(buffer));
 						printf("Desconectando de %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
@@ -149,29 +168,6 @@ int startPreforkWebServer(){
 					}
 				}
 			}
-			*/
-			
-				
-				char buf[2048];
-				int img;
-				struct stat st;
-
-				memset(buf, 0, 2048);
-				read(newSocket, buf, 2047);
-
-				printf("buf::::%s\n", buf);
-
-				printf("path->[%s]", strcat(ARGUMENT_PATH, "img.jpeg"));
-				if(!strncmp(buf, "GET /img.jpeg", 13)){
-					img = open("img.jpeg", O_RDONLY);
-					stat("img.jpeg", &st);  
-					int size = st.st_size;
-					sendfile(newSocket, img, NULL, size);
-					close(img);
-				}else{
-				write(newSocket, webpage, sizeof(webpage)-1);}
-				close(newSocket);
-				
 			
 		}
 		for(int i=0; i<ARGUMENT_MAX_THREADS; i++){
