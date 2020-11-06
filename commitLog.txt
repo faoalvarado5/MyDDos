@@ -1,0 +1,93 @@
+commit 6c5c5bc90983a2049346a6c42a9ca6fedb5220f3
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Thu Nov 5 23:17:42 2020 -0600
+
+    Cambios a httpClientPython
+
+commit 5c12f6522b8ed9cbdf61927c8eb1c91099e9a5fb
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Thu Nov 5 19:10:05 2020 -0600
+
+    Se agrega el stressClient y el PreThread
+
+commit 836670ab594126871b5bd032c7bef58525d722ff
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Wed Nov 4 23:58:47 2020 -0600
+
+    Se trabaja en el PreFork Web Server
+
+commit ac91c52672d0770c0f4c06f08dc70faa21942af6
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Tue Nov 3 03:24:58 2020 -0600
+
+    Se corriigio el stressClient
+
+commit 4736c65a1e12e355229214a68f4696687178f18f
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Mon Nov 2 22:36:16 2020 -0600
+
+    Remplazo de server de prueba por el prethread web server
+
+commit 7c0a5fbc50913e66539b3c7be024436703df8d96
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Mon Nov 2 22:35:51 2020 -0600
+
+    Archivo para el manejo de protocolos
+
+commit 08df833bd583efabae48064a10eb637377d42db8
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Mon Nov 2 22:35:18 2020 -0600
+
+    Creacion de documento principal para manejo de servidor prethread en c
+
+commit 613342b3a74ec48e7f174e035897f3c328a13ad7
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Sat Oct 31 14:14:02 2020 -0600
+
+    Correción de detalles e inicio de stress client
+    
+    Se realizan cambios menores en servidor y se agrega el archivo de stress client que tiene errores que corregir
+
+commit 6c1e39fb08c72e98a26c15fa67718104e42d4378
+Author: Kevin Ledezma <kevinledezma20498@gmail.com>
+Date:   Wed Oct 28 23:52:13 2020 -0600
+
+    binarios del httpClientC (removerse luego)
+
+commit 45f621dd5b5738bf66424c7b61c235deae49aa90
+Author: Kevin Ledezma <kevinledezma20498@gmail.com>
+Date:   Wed Oct 28 23:51:24 2020 -0600
+
+    Carpeta para los archivos html de prueba
+
+commit 132461c6dcdc0b25b1f291ae714c592048d7e716
+Author: Kevin Ledezma <kevinledezma20498@gmail.com>
+Date:   Wed Oct 28 23:48:40 2020 -0600
+
+    Archivo fuente para el cliente http en C
+
+commit f301457284ca02bf8f434fcc74f76a95d4cbd9fe
+Author: Kevin Ledezma <kevinledezma20498@gmail.com>
+Date:   Wed Oct 28 23:48:18 2020 -0600
+
+    Correccion de error menor
+
+commit dda121e7eb6ebd968f05fe1109d02e1aa2b5c881
+Author: Kevin Ledezma <kevinledezma20498@gmail.com>
+Date:   Wed Oct 28 22:46:17 2020 -0600
+
+    Se agrega el codigo fuente para el cliente http en python
+
+commit b56d1f12dbba72e3e0527075d15aa53e5627a473
+Author: Fabrizio <faoalv8@gmail.com>
+Date:   Mon Oct 26 22:48:46 2020 -0600
+
+    Ejemplo agregado
+    
+    Se agrega un ejemplo para interacción del sistema.
+
+commit fbcdaf23d89d37a8df4b1e0e440c9b0c51e60f19
+Author: Fabrizio Alvarado Barquero <44043200+faoalvarado5@users.noreply.github.com>
+Date:   Mon Oct 26 21:52:54 2020 -0600
+
+    Initial commit

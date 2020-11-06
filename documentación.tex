@@ -1,0 +1,300 @@
+\documentclass{report}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\begin{document}
+\begin{titlepage}
+\centering
+{\bfseries\LARGE Instituto Tecnol\'ogico de Costa Rica \par}
+\vspace{1cm}
+{\scshape\Large Facultad de Ingenier\'ia en Computaci\'on \par}
+\vspace{3cm}
+{\scshape\Huge Mi DDoS\par}
+{\scshape\Huge Sistemas Operativos\par}
+\vspace{3cm}
+{\itshape\Large Tarea 2\par}
+\vfill
+{\Large Fabrizio Alvarado Barquero\par}
+{\Large 2017073935\par}
+{\Large Kevin Ledezma Jim\'enez\par}
+{\Large 2017109672\par}
+\vfill
+{\Large Noviembre 2020 \par}
+\end{titlepage}
+\newpage
+\section{Introduci\'on}
+\newline
+El prop\'osito del presente trabajo es aprender sobre el uso de servidores en lenguaje C, donde el objetivo es aprender sobre el concepto de thread y fork, como estos funcionan y tambi\'en su comportamientos, todo esto mediante la implementaci\'on de los servidores utilizando las técnicas prethread y preforked para manejar las conexiones además de solicitudes por parte de clientes.\newline
+\newline
+Ambos servidores tendr\'an el mismo comportamiento, donde su funci\'on principal es el manejo de archivos tales como imagenes, videos, paginas web, entre otros.\newline
+\newline
+Estos servidores tendr\'an caracter\'isticas espec\'ificas seg\'un estos sean invocados, donde algunas de sus variantes son la direcci\'on del sistema de archivos, el n\'umero de procesos o hilos m\'aximos en ejecuci\'on y dem\'as.
+\newpage
+\section{Ambiente de desarrollo}
+- Oracle Virtual Box: \newline Sistema emulador de Ubuntu. \newline
+\newline
+- Geany: \newline Editor de texto. \newline
+\newline
+- IntelliJ: \newline Editor de texto. \newline
+\newline
+- GitHub: \newline Control de versiones. \newline
+\newline
+- Mozilla Firefox: \newline Navegador web utilizado para accesar a los puestos de los servidores. \newline
+\newline
+\newpage
+\section{Estructuras de datos usadas y funciones}
+
+
+\begin{itemize}
+  \item PreThread
+    \begin{itemize}
+      \item Función: connection\_handler: Encargada de las operaciones a realizar para cada thread creado.
+      \item Función: processParameters: Encargada de obtener los datos de los argumentos en consola y asignarlos a variables locales para el uso durante la ejecución.
+      \item Función: main: Encargada de la ejecución principal de la asignación.
+    \end{itemize}
+  \item Arrays
+    \begin{itemize}
+      \item Para la pre-creación de hilos con PreThread
+      \item Para los file descriptors de los clientes en el PreForked
+      \item Para el contenido html (el ´´string'')
+    \end{itemize}
+    
+  \item PreForked
+    \begin{itemize}
+      \item Función: spaceAvailable: Encargada de verificar si permite más conexiones entrantes o si se llenaron los espacios.
+      \item Función: startPreforkWebServer: Encargada de crear el servidor con la técnica "Pre Forked" para recibir conexiones de clientes.
+      \item Función: createServer: Encargada de obtener los parámetros de los argumentos en consola y configurar las variables globales para el uso dentro de la ejecución.
+      \item Función: ImageOpen: función para obtener los datos de los recursos (imagen) del enlace provisto.
+      \item Función: main: Encargada de la ejecución principal de la asignación.
+    \end{itemize}
+   \item httpClientPython
+    \begin{itemize}
+      \item Curl: Función y biblioteca escrita en Python, encargada de solicitar y obtener un recurso a partir de un enlace provisto.
+    \end{itemize}
+    
+    \item protocols.c
+    \begin{itemize}
+      \item Archivo con la intención de manejar la múltiples funciones correspondientes para los protocolos de los distintos puertos web, entre ellos:
+      
+        \begin{itemize}
+            \item HTTP
+            \item FTP
+            \item SSH
+            \item TELNET
+            \item SMTP
+            \item DNS
+            \item SNMP
+        \end{itemize}
+    \end{itemize}
+    
+    \item stressClient
+    \begin{itemize}
+      \item Encargado de crear multiples solicitudes a partir de un cliente en formato binario, con la respectiva configuración desde los argumentos de terminal
+      \item Función: attack: Encargada de recibir una instrucción previamente con formato para terminal, invocar al os.cmd y ejecutarla en varios threads.
+    \end{itemize}
+    
+\end{itemize}
+
+\newpage
+\section{Instrucciones para ejecutar programa}
+
+- Generaci\'on de binario de PreForkWebServer: \newline
+gcc -o PreForkWebServer PreForkWebServer.c\newline
+\newline
+- Ejecuci\'on de binario de PreForkWebServer: \newline
+./PreForkWebServer -n [cantidad procesos] -w [path de archivos] -p [puerto]\newline
+\newline
+- Generaci\'on de binario de PreThreadWebServer: \newline
+gcc -o PreThreadWebServer PreThreadWebServer.c -pthread\newline
+\newline
+- Ejecuci\'on de binario de PreThreadWebServer: \newline
+./PreThreadWebServer -n [cantidad procesos] -w [path de archivos] -p [puerto]\newline
+\newline
+- Generaci\'on de binario de httpClientC: \newline
+gcc -o httpClientC httpClientC.c\newline
+\newline
+- Ejecuci\'on de binario de httpClientC: \newline
+./httpClientC -u [ruta de recurso a obtener]\newline
+\newline
+- Ejecuci\'on de httpClient.py: \newline
+python httpClient.py -u [ruta de recurso a obtener]\newline
+\newline
+- Ejecuci\'on de stressClient: \newline
+python stressClient.py -n [cantidad de hilos] httpClientC -u [parametros del cliente]\newline
+\newline
+\newpage
+\section{Actividades realizadas por estudiante}
+\newline
+\textbf{NOTA: Se da por hecho que los tiempos y las tareas realizadas en esta bitácora son realizadas por ambos estudiantes.}
+\newline\newline
+{\underline {Sábado 24 de octubre - 3 horas}
+\newline
+-Investigación sobre clientes y servidores en C. \newline
+-Investigación sobre hilos y procesos en C.\newline
+-Preparación de ambiente de trabajo, así como instalación de python, git y demás.\newline
+\newline
+Problemas: Ninguno hasta el momento, la sesión fue únicamente una introducción al tema.
+\newline
+\newline
+{\underline {Domingo 25 de octubre - 4 horas}}
+\newline
+-Búsqueda de ejemplo de servidores y clientes tanto en c como en python, para darnos una idea de como funcionan este tipo de sistemas en los lenguajes. \newline
+-Interacción con ejemplo de prueba encontrado en internet, link 1.\newline
+\newline
+Problemas: Muchas dudas en cuanto al funcionamiento de algunos métodos de las bibliotecas. Poca práctica últimamente con respecto al lenguaje C.
+\newline
+\newline
+{\underline {Lunes 26 de octubre - 3 horas}
+\newline
+-Creación del repositorio de git. \newline
+-Investigación a fondo de los métodos mencionados anteriormente.\newline
+-Continua interacción con el ejemplo de prueba para ir comprendiendo mejor el funcionamiento de los sistemas.\newline
+\newline
+Problemas: Nos sentimos un poco desorientados en cuanto a las partes del servidor y del cliente (socket, binding, listener, etc).
+\newline
+\newline
+{\underline {Martes y miércoles 27-28 de octubre - 5 horas}
+\newline
+-Investigación sobre clientes tanto en python como en C\newline
+-Investigación de uso de argumentos\newline
+-Inicio a partir del cliente de prueba de C que teníamos previamente\newline
+-Documentación de código
+\newline
+\newline
+Problemas: Sorpresivamente no tuvimos muchos problemas, hay bastante documentación en internet sobre el tema.
+\newline
+\newline
+{\underline {Viernes y sábado 30-31 de octubre - 3 horas}
+\newline
+-Cambios menores sobre cantidad de conexiones en el servidor.\newline
+-Inicio de investigación sobre stress client en python.\newline
+-Investigacion sobre biblioteca Treq\newline
+\newline
+\newline
+Problemas: Treq.
+\newline
+\newline
+{\underline {Domingo, lunes, martes 1-2-3 de noviembre - 9 horas:}
+\newline
+-Pruebas con el servidor pre thread\newline
+-Entendiendo el funcionamiento de sus métodos y cómo se manejan los hilos\newline
+-Se inició con el stress cliente.
+\newline
+\newline
+Problemas: Muchos en realidad, pero esencialmente, ninguno meramente importante.
+\newline
+\newline
+{\underline {Miércoles 4 de noviembre - 6 horas:}
+\newline
+-Cambios menores sobre cantidad de conexiones en el servidor.\newline
+-Inicio de investigación sobre stress client en python.\newline
+-Investigacion sobre biblioteca Treq
+\newline
+\newline
+Problemas: Treq.
+\newline
+\newline
+{\underline {Miércoles 4 de noviembre - 6 horas:}
+\newline
+-Pruebas con el servidor pre forked\newline
+-Entendiendo el funcionamiento de sus métodos y cómo se manejan los procesos
+\newline
+\newline
+Problemas: Errores en cuanto a manejo de archivos.
+\newline
+\newline
+{\underline {Jueves 5 de noviembre - 8 horas:}
+\newline
+-Finalización y corrección de problemas tanto el server prethread como preforked\newline
+-Corrección del stress client.\newline
+-Documentación
+\newline
+\newline
+Problemas: Archivos a obtener.
+\newpage
+\section{Autoevaluaci\'on}
+\newline
+\newline
+- Estado final: \newline
+El estado final de los servidores es tal como se pidi\'o en la especificaci\'on, con los metodos PreThread y PreFork
+un sistema de servidores ejecutables que permite obtener recursos de un sistema de archivos.\newline
+
+\newline
+\newline
+
+- Problemas:\newline
+Tiempo y conocimiento del tema por lo que nos result\'o imposible la finalizaci\'on del CGI. \newline
+
+\newline
+\newline
+
+- Limitaciones:\newline
+El tiempo fue un factor muy importante, además de 
+\newline
+
+- Evaluaci\'on: \newline
+
+\begin{tabular}{x y z w}
+Caracter\'istica & Valor & Fabrizio & Kevin \\ \hline
+WebServer & 40 & 30 & 30\\
+Protocolos & 10 & 10 & 10\\
+httpClient-C & 5 & 5 & 5\\
+httpClient-PY & 5 & 5 & 5\\
+stressClient-PY & 10 & 10 & 10\\
+CG- Injector & 10 & 0 & 0\\
+Documentaci\'on & 20 & 20 & 20\\ \hline
+Total & 100 & 80 & 80 \\ \hline
+\end{tabular}
+\newline
+\newline
+\newline
+\newline
+\newline
+-Repositorio de GitHub: \newline
+https://github.com/faoalvarado5/MyDDos \newline
+\newline
+-Reporte de commits: \newline
+https://github.com/faoalvarado5/MyDDos/commits?\newline
+Al igual que se encuentra un archivo de txt llamado "commitlog.txt" con el registro de los commit del repositorio de git.
+
+\newpage
+\section{Lecciones aprendidas}
+\newline
+{\underline {Fabrizio:}\newline
+\newline
+La verdad me gustar\'ia decir que es una tarea bastante complicada, porque hay que aprender muchos tecnisismos sobre todo en realidad, sobre los hilos, procesos, servidores, clientes y dem\'as, cosa que al menos en mi caso no estoy acostumbrado a trabajar a este nivel.
+\newline
+Por otra parte, la verdad creo que si logr\'e entender como es que estos funcionan y se comportan a la hora de utilizarlos.
+\newline
+\newline
+{\underline {Kevin:}
+\newline
+\newline
+Esta asignaci\'on fue desafiante, por que nos hace estudiar un concepto nuevo que no es f\'acil de comprender. Me hubiera gustado tener mayor tiempo (no se conf\'ien, puede ser sencilla pero consumir\'an horas estudiando lo que deben hacer) y tener tambi\'en mayor claritud en cuanto a lo que sucede en estos procesos y a\'un m\'as claridad en cuanto a su implementaci\'on. Me siento "satisfecho" con el progreso que hicimos, pero siento que podemos demostrar m\'as, solo nos queda seguir trabajando duro.
+\newpage
+\section{Bibliograf\'ia}
+\newline
+- Socket Programming in C/C++ - GeeksforGeeks. GeeksforGeeks. (2020). 
+Retrieved 5 November 2020, from https://www.geeksforgeeks.org/socket-programming-cc/. \newline
+\newline
+- Using cURL in Python with PycURL. Stack Abuse. (2020). Retrieved 5 November 2020, from https://stackabuse.com/using-curl-in-python-with-pycurl/. \newline
+\newline
+- Multiple Client Server Program in C using fork | Socket Programming(2020). Retrieved 5 November 2020, from https://www.youtube.com/watch?v=BIJGSQEipEE. \newline
+\newline
+- nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork. GitHub. (2020). Retrieved 5 November 2020, from https://github.com/nikhilroxtomar/Multiple-Client-Server-Program-in-C-using-fork/blob/master/tcpServer.c. \newline
+\newline
+- Python, P., & KR, K. (2020). Process Multiple Requests Simultaneously and return the result using Klein Module Python. Stack Overflow. Retrieved 5 November 2020, from https://stackoverflow.com/questions/41392710/process-multiple-requests-simultaneously-and-return-the-result-using-klein-modul/41406549#41406549. \newline
+\newline
+- POSIX Threads Programming. Computing.llnl.gov. (2020). Retrieved 5 November 2020, from https://computing.llnl.gov/tutorials/pthreads/#Pthread. \newline
+\newline
+- pthread_create(3) - Linux manual page. Man7.org. (2020). Retrieved 5 November 2020, from https://man7.org/linux/man-pages/man3/pthread_create.3.html. \newline
+\newline
+- C, m., Deep, S., & Deep, S. (2020). multithread server/client implementation in C. Stack Overflow. \newline
+Retrieved 5 November 2020, from https://stackoverflow.com/questions/21405204/multithread-server-client-implementation-in-c. \newline
+\newline
+- RedAndBlueEraser/c-multithreaded-client-server. GitHub. (2020). Retrieved 5 November 2020, \newline
+from https://github.com/RedAndBlueEraser/c-multithreaded-client-server/blob/master/server.c. \newline
+\newline
+- 14 common network ports you should know. Opensource.com. (2020). Retrieved 5 November 2020, from https://opensource.com/article/18/10/common-network-ports. \newline
+\newline
+
+\end{document}
